@@ -175,8 +175,6 @@ export default {
 
       // Array to return
       var r = []
-      // Flag to monitor changes
-      var changed = false
 
       // Trim all zeroes at the front, i.e. [4,0,2,2] => [4,2,2,0]
       var k = 0
@@ -187,7 +185,6 @@ export default {
       }
       while (k < 4) {
         arr[k++] = 0
-        changed = true
       }
 
       // if arr[0] == arr[1]
@@ -203,21 +200,18 @@ export default {
           r.push(arr[3])
           r.push(0)
         }
-        changed = true
       // if arr[1] == arr[2]
       } else if (arr[1] === arr[2]) {
         r.push(arr[0])
         r.push(this.addNewOccurance(arr[1] * 2))
         r.push(arr[3])
         r.push(0)
-        changed = true
       // if arr[2] == arr[3]
       } else if (arr[2] === arr[3]) {
         r.push(arr[0])
         r.push(arr[1])
         r.push(this.addNewOccurance(arr[2] * 2))
         r.push(0)
-        changed = true
       // nothing to squeeze
       } else {
         return arr
@@ -241,8 +235,11 @@ export default {
         split = []
       }
 
+      var changed = !this.equalArrays2(update, this.numbers, this.size * this.size)
       this.numbers = update
-      this.generateNewElement()
+      if (changed) {
+        this.generateNewElement()
+      }
     },
     keyright () {
       var split = []
@@ -257,8 +254,11 @@ export default {
         split = []
       }
 
+      var changed = !this.equalArrays2(update, this.numbers, this.size * this.size)
       this.numbers = update
-      this.generateNewElement()
+      if (changed) {
+        this.generateNewElement()
+      }
     },
     keyup () {
       var split = []
@@ -274,8 +274,13 @@ export default {
       }
 
       // Take the transpose of the result
-      this.numbers = this.transpose(update)
-      this.generateNewElement()
+      update = this.transpose(update)
+
+      var changed = !this.equalArrays2(update, this.numbers, this.size * this.size)
+      this.numbers = update
+      if (changed) {
+        this.generateNewElement()
+      }
     },
     keydown () {
       var split = []
@@ -311,8 +316,11 @@ export default {
         }
       }
 
+      var changed = !this.equalArrays2(update, this.numbers, this.size * this.size)
       this.numbers = update
-      this.generateNewElement()
+      if (changed) {
+        this.generateNewElement()
+      }
     },
     // Returns the class of an element, where each class has different background colour
     elementStyle (n) {
@@ -341,6 +349,14 @@ export default {
       ret[14] = arr[11]
       ret[15] = arr[15]
       return ret
+    },
+    equalArrays2 (a, b, n) {
+      for (var i = 0; i < n; i++) {
+        if (a[i] !== b[i]) {
+          return false
+        }
+      }
+      return true
     }
   }
 }
