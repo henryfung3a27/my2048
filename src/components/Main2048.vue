@@ -161,8 +161,7 @@ export default {
     },
     /*
       squeeze will do the squeezing when pressed arrow keys
-      @arr array of 4 arrays, i.e. [[], [], [], []]
-      It pushes elements in each sub-array to the left
+      It pushes elements in the array to the left
       Example: [2, 4, 4, 2] -> [2, 8, 2, 0]
 
       @param arr An array of 4 integers
@@ -176,6 +175,8 @@ export default {
 
       // Array to return
       var r = []
+      // Flag to monitor changes
+      var changed = false
 
       // Trim all zeroes at the front, i.e. [4,0,2,2] => [4,2,2,0]
       var k = 0
@@ -186,11 +187,12 @@ export default {
       }
       while (k < 4) {
         arr[k++] = 0
+        changed = true
       }
 
       // if arr[0] == arr[1]
       if (arr[0] === arr[1]) {
-        r.push(this.addNewOccurance(arr[0] * 2)) // `````````````````````````````````
+        r.push(this.addNewOccurance(arr[0] * 2))
         // if arr[2] == arr[3]
         if (arr[2] === arr[3]) {
           r.push(this.addNewOccurance(arr[2] * 2))
@@ -201,24 +203,27 @@ export default {
           r.push(arr[3])
           r.push(0)
         }
+        changed = true
       // if arr[1] == arr[2]
       } else if (arr[1] === arr[2]) {
         r.push(arr[0])
         r.push(this.addNewOccurance(arr[1] * 2))
         r.push(arr[3])
         r.push(0)
+        changed = true
       // if arr[2] == arr[3]
       } else if (arr[2] === arr[3]) {
         r.push(arr[0])
         r.push(arr[1])
         r.push(this.addNewOccurance(arr[2] * 2))
         r.push(0)
+        changed = true
       // nothing to squeeze
       } else {
         return arr
       }
 
-      return r
+      return (r, changed)
     },
     reset () {
       this.initBoard()
@@ -309,12 +314,14 @@ export default {
       this.numbers = update
       this.generateNewElement()
     },
+    // Returns the class of an element, where each class has different background colour
     elementStyle (n) {
       if (n > 8192) {
         return 'numElementOther'
       }
       return `numElement${n}`
     },
+    // Returns the transpose of a 4*4 1D-array
     transpose (arr) {
       var ret = []
       ret[0] = arr[0]
