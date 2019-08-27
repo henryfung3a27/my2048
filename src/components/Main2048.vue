@@ -223,7 +223,7 @@ export default {
         return arr
       }
 
-      return (r, changed)
+      return r
     },
     reset () {
       this.initBoard()
